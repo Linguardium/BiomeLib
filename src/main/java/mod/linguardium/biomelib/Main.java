@@ -2,6 +2,7 @@ package mod.linguardium.biomelib;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.registry.BuiltinRegistries;
@@ -39,6 +40,7 @@ public class Main implements ModInitializer {
         BiomeAdders.addSpawnToBiome(Biomes.PLAINS, SpawnGroup.MONSTER,new SpawnSettings.SpawnEntry(EntityType.HOGLIN,200,2,3));
         BiomeAdders.addCarverToBiome(Biomes.PLAINS, GenerationStep.Carver.AIR, ConfiguredCarvers.NETHER_CAVE);
 */
+        BiomeAdders.init();
     }
 
     public static void log(Level level, String message){

@@ -1,8 +1,12 @@
 package mod.linguardium.biomelib;
 
 import com.google.common.collect.*;
+import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.util.Pair;
+import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.carver.CarverConfig;
@@ -10,13 +14,50 @@ import net.minecraft.world.gen.carver.ConfiguredCarver;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.ConfiguredStructureFeature;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class BiomeAdders {
+    private static class BiomeFeature {
+        GenerationStep.Feature feature;
+        ConfiguredFeature<?,?> configuredFeature;
+        Function<Biome, Boolean> predicate;
+        BiomeFeature(GenerationStep.Feature feature, ConfiguredFeature<?, ?> configuredFeature, Function<Biome, Boolean> predicate) {
+            this.feature=feature;
+            this.configuredFeature=configuredFeature;
+            this.predicate=predicate;
+        }
+    }
+    private static class StructureFeature {
+        ConfiguredStructureFeature<?, ?> configuredStructureFeature;
+        Function<Biome, Boolean> predicate;
+        StructureFeature( ConfiguredStructureFeature<?, ?> structureFeature, Function<Biome, Boolean> predicate) {
+            this.configuredStructureFeature=structureFeature;
+            this.predicate=predicate;
+        }
+
+    }
+    private static List<BiomeFeature> BiomeFeatures = new ArrayList<>();
+    private static List<StructureFeature> StructureFeatures = new ArrayList<>();
+    public static void addFeatureToBiomes(net.minecraft.world.gen.GenerationStep.Feature feature, ConfiguredFeature<?, ?> configuredFeature, Function<Biome, Boolean> predicate) {
+        BiomeFeatures.add(new BiomeFeature(feature,configuredFeature,predicate));
+        for (Biome biome : BuiltinRegistries.BIOME) {
+            if (predicate.apply(biome))
+                addFeatureToBiome(biome,feature,configuredFeature);
+        }
+    }
+    public static void addStructureToBiomes(ConfiguredStructureFeature<?, ?> configuredFeature, Function<Biome, Boolean> predicate) {
+        StructureFeatures.add(new StructureFeature(configuredFeature,predicate));
+        for (Biome biome : BuiltinRegistries.BIOME) {
+            if (predicate.apply(biome))
+                addStructureFeatureToBiome(biome,configuredFeature);
+        }
+    }
     public static void addFeatureToBiome(Biome biome, net.minecraft.world.gen.GenerationStep.Feature feature, ConfiguredFeature<?, ?> configuredFeature) {
         ConvertImmutableFeatures(biome);
         List l = biome.method_30970().features;
@@ -69,4 +110,20 @@ public class BiomeAdders {
             biome.method_30970().features= biome.method_30970().features.stream().map(Lists::newArrayList).collect(Collectors.toList());
         }
     }
+
+
+    public static void init() {
+        RegistryEntryAddedCallback.event(BuiltinRegistries.BIOME).register((i, id, biome)->{
+            for (BiomeFeature f : BiomeFeatures) {
+                if (f.predicate.apply(biome))
+                    addFeatureToBiome(biome,f.feature,f.configuredFeature);
+            }
+            for (StructureFeature f : StructureFeatures) {
+                if (f.predicate.apply(biome))
+                    addStructureFeatureToBiome(biome,f.configuredStructureFeature);
+            }
+        });
+
+    }
+
 }
