@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "biomelib",
+  "version": "${version}",
+  "name": "BiomeCompatLib",
+  "description": "Biome library",
+  "authors": [
+    "Linguardium"
+  ],
+  "contributors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/biomelib/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "mod.linguardium.biomelib.Main"
+    ],
+    "client": [],
+    "server": []
+  },
+  "mixins": [
+  ],
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*"
+  },
+  "accessWidener": "biomelib.aw"
+}
