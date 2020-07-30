@@ -38,6 +38,7 @@ public class Main implements ModInitializer {
         BiomeAdders.addStructureFeatureToBiome(Biomes.PLAINS,END_CITY);
         BiomeAdders.addSpawnToBiome(Biomes.PLAINS, SpawnGroup.MONSTER,new SpawnSettings.SpawnEntry(EntityType.HOGLIN,200,2,3));
         BiomeAdders.addCarverToBiome(Biomes.PLAINS, GenerationStep.Carver.AIR, ConfiguredCarvers.NETHER_CAVE);
+
     }
 
     public static void log(Level level, String message){
