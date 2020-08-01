@@ -19,11 +19,10 @@
     "client": [],
     "server": []
   },
-  "mixins": [
+  "mixins": [ "biomelib.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.4.0",
     "fabric": "*"
-  },
-  "accessWidener": "biomelib.aw"
+  }
 }

@@ -1,12 +1,12 @@
 package mod.linguardium.biomelib;
 
 import com.google.common.collect.*;
+import mod.linguardium.biomelib.accessors.GSAccess;
+import mod.linguardium.biomelib.accessors.SSAccess;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.util.Pair;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.carver.CarverConfig;
@@ -17,7 +17,6 @@ import net.minecraft.world.gen.feature.ConfiguredStructureFeature;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -60,54 +59,54 @@ public class BiomeAdders {
     }
     public static void addFeatureToBiome(Biome biome, net.minecraft.world.gen.GenerationStep.Feature feature, ConfiguredFeature<?, ?> configuredFeature) {
         ConvertImmutableFeatures(biome);
-        List l = biome.method_30970().features;
+        List l = biome.method_30970().method_30983();
         while (l.size()<feature.ordinal()+1)
             l.add(Lists.newArrayList());
-        biome.method_30970().features.get(feature.ordinal()).add(()->configuredFeature);
+        biome.method_30970().method_30983().get(feature.ordinal()).add(()->configuredFeature);
     }
     public static void addStructureFeatureToBiome(Biome biome, ConfiguredStructureFeature<?, ?> configuredStructureFeature ) {
         ConvertImmutableStructureFeatures(biome);
-        biome.method_30970().starts.add(()->configuredStructureFeature);
+        biome.method_30970().method_30975().add(()->configuredStructureFeature);
     }
     public static void addSpawnToBiome(Biome biome, SpawnGroup group, SpawnSettings.SpawnEntry entry) {
         ConvertImmutableSpawnList(biome);
-        if (!biome.method_30966().spawners.containsKey(group)) {
-            biome.method_30966().spawners.put(group,Lists.newArrayList());
+        if (!((SSAccess)biome.method_30966()).BiomeLib$getSpawners().containsKey(group)) {
+            ((SSAccess)biome.method_30966()).BiomeLib$getSpawners().put(group,Lists.newArrayList());
         }
         biome.method_30966().method_31004(group).add(entry);
     }
     public static <C extends CarverConfig> void addCarverToBiome(Biome biome, GenerationStep.Carver carver, ConfiguredCarver<C> configuredCarver) {
         ConvertImmutableCarvers(biome);
-        biome.method_30970().carvers.computeIfAbsent(carver,(a)->Lists.newArrayList()).add(()->configuredCarver);
+        ((GSAccess)biome.method_30970()).BiomeLib$getCarvers().computeIfAbsent(carver,(a)->Lists.newArrayList()).add(()->configuredCarver);
 
     }
     private static void ConvertImmutableSpawnList(Biome biome) {
-        if (biome.method_30966().spawners instanceof ImmutableMap) {
+        if (((SSAccess)biome.method_30966()).BiomeLib$getSpawners() instanceof ImmutableMap) {
             HashMap<SpawnGroup, List<SpawnSettings.SpawnEntry>> map = Maps.newHashMap();
 
-            biome.method_30966().spawners.forEach((k,v)->{
+            ((SSAccess)biome.method_30966()).BiomeLib$getSpawners().forEach((k,v)->{
                 map.put(k,Lists.newArrayList(v));
             });
-            biome.method_30966().spawners=map;
+            ((SSAccess)biome.method_30966()).BiomeLib$setSpawners(map);
         }
     }
     private static void ConvertImmutableStructureFeatures(Biome biome) {
-        if (biome.method_30970().starts instanceof ImmutableList) {
-            biome.method_30970().starts = Lists.newArrayList(biome.method_30970().starts);
+        if (biome.method_30970().method_30975() instanceof ImmutableList) {
+            ((GSAccess)biome.method_30970()).BiomeLib$setStructureStarts(Lists.newArrayList(biome.method_30970().method_30975()));
         }
     }
     private static void ConvertImmutableCarvers(Biome biome) {
-        if (biome.method_30970().carvers instanceof ImmutableMap) {
+        if (((GSAccess)biome.method_30970()).BiomeLib$getCarvers() instanceof ImmutableMap) {
             HashBiMap<GenerationStep.Carver, List<Supplier<ConfiguredCarver<?>>>> map = HashBiMap.create();
-            biome.method_30970().carvers.forEach((k,v)-> {
+            ((GSAccess)biome.method_30970()).BiomeLib$getCarvers().forEach((k,v)-> {
                 map.put(k, Lists.newArrayList(v));
             });
-            biome.method_30970().carvers=map;
+            ((GSAccess)biome.method_30970()).BiomeLib$setCarvers(map);
         }
     }
     private static void ConvertImmutableFeatures(Biome biome) {
-        if (biome.method_30970().features instanceof ImmutableList) {
-            biome.method_30970().features= biome.method_30970().features.stream().map(Lists::newArrayList).collect(Collectors.toList());
+        if (biome.method_30970().method_30983() instanceof ImmutableList) {
+            ((GSAccess)biome.method_30970()).BiomeLib$features(biome.method_30970().method_30983().stream().map(Lists::newArrayList).collect(Collectors.toList()));
         }
     }
 

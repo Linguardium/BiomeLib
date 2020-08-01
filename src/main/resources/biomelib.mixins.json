@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "mod.linguardium.biomelib.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "GenerationSettingsMixin",
+    "SpawnSettingsMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

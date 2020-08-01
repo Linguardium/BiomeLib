@@ -32,14 +32,12 @@ public class Main implements ModInitializer {
     public void onInitialize() {
         //log(Level.INFO, "Initializing");
         //TODO: Initializer
-        /*for (Biome biome : BuiltinRegistries.BIOME) {
-            System.out.println(biome.toString() + ": " + String.valueOf(biome.method_30970().features.size()));
-        }
+
         BiomeAdders.addFeatureToBiome(Biomes.PLAINS, GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeatures.TREES_SAVANNA);
         BiomeAdders.addStructureFeatureToBiome(Biomes.PLAINS,END_CITY);
         BiomeAdders.addSpawnToBiome(Biomes.PLAINS, SpawnGroup.MONSTER,new SpawnSettings.SpawnEntry(EntityType.HOGLIN,200,2,3));
         BiomeAdders.addCarverToBiome(Biomes.PLAINS, GenerationStep.Carver.AIR, ConfiguredCarvers.NETHER_CAVE);
-*/
+
         BiomeAdders.init();
     }
 
