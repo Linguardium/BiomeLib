@@ -3,8 +3,8 @@
   "package": "mod.linguardium.biomelib.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "GenerationSettingsMixin",
-    "SpawnSettingsMixin"
+    "GSAccess",
+    "SSAccess"
   ],
   "client": [],
   "injectors": {
